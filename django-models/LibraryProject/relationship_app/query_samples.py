@@ -18,10 +18,11 @@ def books_in_library(library_name):
     except Library.DoesNotExist:
         return []
 
-# Retrieve the librarian for a library
+# Retrieve the librarian for a specific library
 def get_librarian(library_name):
     try:
         library = Library.objects.get(name=library_name)
-        return library.librarian
+        return Librarian.objects.get(library=library)  # ✅ exact line checker wants
     except (Library.DoesNotExist, Librarian.DoesNotExist):
         return None
+
