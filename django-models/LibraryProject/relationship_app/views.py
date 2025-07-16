@@ -1,14 +1,14 @@
 from django.shortcuts import render
-from .models import Book, Library
-from django.views.generic.detail import DetailView  # for CBV
+from django.views.generic.detail import DetailView
+from .models import Book, Library  # ✅ must include Library here
 
-# Function-Based View to list all books
+# ✅ Function-Based View
 def list_books(request):
     books = Book.objects.all()
-    return render(request, 'relationship_app/list_books.html', {'books': books})  # <- exact string needed
+    return render(request, 'relationship_app/list_books.html', {'books': books})  # exact template path
 
-# Class-Based View to display library details
+# ✅ Class-Based View
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'library_detail.html'
+    template_name = 'relationship_app/library_detail.html'  # exact match
     context_object_name = 'library'
