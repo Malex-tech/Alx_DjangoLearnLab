@@ -4,6 +4,11 @@ from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
 
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("Welcome to the homepage!")
+
 # Function-Based View
 def list_books(request):
     books = Book.objects.all()
