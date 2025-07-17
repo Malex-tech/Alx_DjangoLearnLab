@@ -24,5 +24,6 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', include('relationship_app.urls')),
     path('logout/', views.logout_view, name='logout'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
 ]
 

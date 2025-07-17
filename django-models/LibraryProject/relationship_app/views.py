@@ -9,6 +9,19 @@ from django.http import HttpResponse
 def home(request):
     return HttpResponse("Welcome to the homepage!")
 
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+from .models import UserProfile
+
+@login_required
+def admin_dashboard(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    if user_profile.role == 'Admin':
+        return render(request, 'relationship_app/admin_dashboard.html')
+    else:
+        return HttpResponseForbidden("You do not have permission to view this page.")
+
 # Function-Based View
 def list_books(request):
     books = Book.objects.all()

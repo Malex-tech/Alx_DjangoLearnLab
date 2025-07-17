@@ -4,7 +4,7 @@ from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
-    path('', views.home_view, name='home'),  # 👈 now root works
+   # path('', views.home_view, name='home'),  # 👈 now root works
     path('register/', views.register_view, name='register'),
     path('login/', LoginView.as_view(template_name='relationship_app/login.html', 
                                      redirect_authenticated_user=True), name='login'),
