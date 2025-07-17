@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    path('', include('relationship_app.urls')),  # this line assumes 'relationship_app/urls.py' exists
     path('admin/', admin.site.urls),
-    path('', include('relationship_app.urls')),
 ]
