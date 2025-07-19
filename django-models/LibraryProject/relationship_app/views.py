@@ -6,6 +6,8 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic.detail import DetailView
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 from .models import Book, Library, UserProfile
 from .forms import BookForm
@@ -114,4 +116,14 @@ def delete_book(request, pk):
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book.html', {'book': book})
 
+@login_required
+def admin_view(request):  
     return render(request, "relationship_app/admin_view.html")
+
+@login_required
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
+
+@login_required
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
