@@ -24,6 +24,14 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', include('relationship_app.urls')),
     path('logout/', views.logout_view, name='logout'),
+    path('', views.home, name='home'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
 ]
 
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('relationship_app.urls')),  # Include the app's URLs
+]

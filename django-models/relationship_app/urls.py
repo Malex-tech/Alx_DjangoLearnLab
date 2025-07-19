@@ -2,6 +2,8 @@
 from django.urls import path  # This line was missing!
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
+from relationship_app import views
+
 
 urlpatterns = [
    # path('', views.home_view, name='home'),  # 👈 now root works
