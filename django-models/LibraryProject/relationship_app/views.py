@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, get_object_or_404, redirect
@@ -7,8 +8,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic.detail import DetailView
 
 from .models import Book, Library, UserProfile
-from .forms import BookForm  # Make sure this form exists
-
+from .forms import BookForm
+from django.db.models import Q
+from django.contrib.auth.models import User
 # Home Page
 def home(request):
     return HttpResponse("Welcome to the homepage!")
@@ -111,3 +113,5 @@ def delete_book(request, pk):
         book.delete()
         return redirect('list_books')
     return render(request, 'relationship_app/delete_book.html', {'book': book})
+
+    return render(request, "relationship_app/admin_view.html")
