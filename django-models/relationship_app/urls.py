@@ -12,4 +12,5 @@ urlpatterns = [
                                      redirect_authenticated_user=True), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('list-books/', views.list_books, name='list_books'),  # Make sure this exists
+     path('', views.home, name='home'),  # Home page
 ]
