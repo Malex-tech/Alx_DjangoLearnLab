@@ -35,4 +35,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('relationship_app.urls')),  # Include the app's URLs
     path('roles/', include('relationship_app.urls')),
+
+
+]
+
+urlpatterns = [
+    path('', views.library_home, name='library-home'),
 ]

@@ -8,6 +8,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.views.generic.detail import DetailView
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from .models import Library
+from django.views.generic import ListView, DetailView
 
 from .models import Book, Library, UserProfile
 from .forms import BookForm
@@ -54,11 +56,20 @@ def list_books(request):
     books = Book.objects.all()
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
+def library_home(request):
+    return render(request, 'relationship_app/library_home.html')
+
+
 # Library Detail View (Class-Based)
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
+
+class LibraryListView(ListView):
+    model = Library
+    template_name = 'relationship_app/library_list.html'  # optional
+    context_object_name = 'libraries'  # optional
 
 # Register View
 def register_view(request):

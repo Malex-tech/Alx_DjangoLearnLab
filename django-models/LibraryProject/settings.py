@@ -59,6 +59,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates'],  # <-- Add this line
+        'DIRS': [],  # Can leave empty if you're only using app-level templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,5 +132,4 @@ LOGIN_REDIRECT_URL = '/'  # or replace '/' with your desired post-login path
 LOGOUT_REDIRECT_URL = '/login/'  # optional, but good UX
 LOGIN_REDIRECT_URL = '/relationship_home/'
 LOGIN_REDIRECT_URL = '/list-books/'  # Or use a named URL like reverse('list_books')
-
 
