@@ -3,6 +3,7 @@
 from django.urls import path
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
+from .views import list_books
 
 # If you're using class-based views, import them like this:
 from .views import LibraryListView, LibraryDetailView
@@ -17,6 +18,10 @@ urlpatterns = [
     path('add_book/', views.add_book, name='add_book'),  # <-- THIS
     path('edit_book/<int:pk>/', views.edit_book, name='edit_book'),  # <-- AND THIS
     path('delete_book/<int:pk>/', views.delete_book, name='delete_book'),
+]
+
+urlpatterns = [
+    path('books/', list_books, name='book-list'),  # ✅ connect it to a route
 ]
 
 urlpatterns = [

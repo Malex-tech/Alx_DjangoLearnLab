@@ -10,7 +10,8 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Library
 from django.views.generic import ListView, DetailView
-
+from django.shortcuts import render
+from .models import Book 
 from .models import Book, Library, UserProfile
 from .forms import BookForm
 from django.db.models import Q

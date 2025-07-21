@@ -132,4 +132,3 @@ LOGIN_REDIRECT_URL = '/'  # or replace '/' with your desired post-login path
 LOGOUT_REDIRECT_URL = '/login/'  # optional, but good UX
 LOGIN_REDIRECT_URL = '/relationship_home/'
 LOGIN_REDIRECT_URL = '/list-books/'  # Or use a named URL like reverse('list_books')
-
