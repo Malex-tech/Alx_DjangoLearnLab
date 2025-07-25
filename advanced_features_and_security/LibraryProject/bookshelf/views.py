@@ -30,3 +30,12 @@ def book_list(request):
 # GOOD
 title = request.GET.get('title')
 books = Book.objects.filter(title__icontains=title)  # ORM handles injection risks
+
+# bookshelf/views.py
+
+from django.http import HttpResponse
+
+def secure_view(request):
+    response = HttpResponse("Secure!")
+    response['Content-Security-Policy'] = "default-src 'self'"
+    return response
