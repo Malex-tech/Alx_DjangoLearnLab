@@ -1,40 +1,27 @@
-# LibraryProject - Permissions and Groups Management
+# LibraryProject
 
 ## Overview
 
-This Django project demonstrates managing custom permissions and user groups to control access to different features of the application. The permissions are tied to the `Book` model in the `bookshelf` app.
+This Django project demonstrates how to implement and manage custom user permissions and groups using Django's built-in auth system. The `bookshelf` app contains the core models and views for managing books and enforcing access control.
 
----
+## Permissions
 
-## Custom Permissions
-
-Defined in `bookshelf/models.py` under the `Book` model:
-
-- `can_create` – Allows a user to create new book entries.
-- `can_delete` – Allows a user to delete book entries.
-
-These permissions are declared using the `Meta` class of the model.
-
----
+The `Book` model in `bookshelf/models.py` has two custom permissions:
+- `can_create`: Allows users to add new books.
+- `can_delete`: Allows users to delete existing books.
 
 ## User Groups
 
-The following user groups were created using the Django admin:
+Created via the Django admin panel:
+- **Admins**: Full access (`can_create`, `can_delete`)
+- **Editors**: Only `can_create`
+- **Viewers**: No special permissions
 
-- **Admins**: All permissions (`can_create`, `can_delete`, etc.)
-- **Editors**: Only `can_create` permission
-- **Viewers**: No special permissions, just view access
+## Views Protection
 
-Permissions were assigned to groups via the admin interface.
+Permissions are enforced in views using the `@permission_required` decorator. For example:
 
----
-
-## Permission Enforcement in Views
-
-Views in `bookshelf/views.py` use the `@permission_required` decorator to enforce access control.
-
-Example:
 ```python
 @permission_required('bookshelf.can_create', raise_exception=True)
-def create_book(request):
+def add_book(request):
     ...
