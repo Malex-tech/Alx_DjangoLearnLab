@@ -24,3 +24,9 @@ def book_list(request):
     return render(request, 'bookshelf/book_list.html', {'books': books})
 
 # Create your views here.
+# BAD
+# Book.objects.raw(f"SELECT * FROM books WHERE title = '{title}'")
+
+# GOOD
+title = request.GET.get('title')
+books = Book.objects.filter(title__icontains=title)  # ORM handles injection risks

@@ -134,3 +134,44 @@ LOGIN_REDIRECT_URL = '/'  # or replace '/' with your desired post-login path
 LOGOUT_REDIRECT_URL = '/login/'  # optional, but good UX
 LOGIN_REDIRECT_URL = '/relationship_home/'
 LOGIN_REDIRECT_URL = '/list-books/'  # Or use a named URL like reverse('list_books')
+
+
+DEBUG = False
+
+# Secure browser protections
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+# Enforce HTTPS cookies (for production)
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Add CSP Middleware if you're using django-csp
+INSTALLED_APPS += ['csp']
+MIDDLEWARE += [
+    'csp.middleware.CSPMiddleware',
+]
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", 'fonts.googleapis.com')
+CSP_FONT_SRC = ("'self'", 'fonts.gstatic.com')
+CSP_SCRIPT_SRC = ("'self'",)
+
+# settings.py
+
+INSTALLED_APPS += [
+    'csp',
+]
+
+MIDDLEWARE += [
+    'csp.middleware.CSPMiddleware',
+]
+
+CSP_DEFAULT_SRC = ("'self'",)
+
+# settings.py
+
+MIDDLEWARE += [
+    'LibraryProject.middleware.ContentSecurityPolicyMiddleware',
+]
