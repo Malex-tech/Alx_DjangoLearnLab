@@ -1,37 +1,20 @@
 # relationship_app/urls.py
-
-from django.urls import path
+from django.urls import path  # This line was missing!
 from . import views
+from django.urls import path, include
 from django.contrib.auth.views import LoginView, LogoutView
-from .views import list_books
+from relationship_app import views
 
-# If you're using class-based views, import them like this:
-from .views import LibraryListView, LibraryDetailView
 
 urlpatterns = [
-    path('', views.home, name='home'),
+   # path('', views.home_view, name='home'),  # 👈 now root works
     path('register/', views.register_view, name='register'),
-    path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
-    path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
-    
-    # Book routes
-    path('add_book/', views.add_book, name='add_book'),  # <-- THIS
-    path('edit_book/<int:pk>/', views.edit_book, name='edit_book'),  # <-- AND THIS
-    path('delete_book/<int:pk>/', views.delete_book, name='delete_book'),
-]
-
-urlpatterns = [
-    path('books/', list_books, name='book-list'),  # ✅ connect it to a route
-]
-
-urlpatterns = [
-    path('admin-role/', views.admin_view, name='admin_view'),
-    path('librarian-role/', views.librarian_view, name='librarian_view'),
-    path('member-role/', views.member_view, name='member_view'),
-]
-
-urlpatterns = [
-    path('', views.library_home, name='library-home'),  # FBV
-    path('libraries/', LibraryListView.as_view(), name='library-list'),  # CBV
-    path('libraries/<int:pk>/', LibraryDetailView.as_view(), name='library-detail'),  # CBV
+    path('login/', LoginView.as_view(template_name='relationship_app/login.html', 
+                                     redirect_authenticated_user=True), name='login'),
+    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('list-books/', views.list_books, name='list_books'),  # Make sure this exists
+    path('', views.home, name='home'),  # Home page
+    path('login/', include('relationship_app.urls')),  # this includes the broken stuff
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('', views.library_home, name='library-home'),  # <-- 🔥 THIS is the line throwing errors
 ]
