@@ -2,6 +2,33 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, redirect
 from .models import Book
+from .forms import ExampleForm
+
+
+def my_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Do something with cleaned data
+            return render(request, 'success.html', {'form': form})
+    else:
+        form = ExampleForm()
+
+    return render(request, 'my_template.html', {'form': form})
+
+from django.views.generic import FormView
+from .forms import ExampleForm
+
+class MyFormView(FormView):
+    template_name = 'my_template.html'
+    form_class = ExampleForm
+    success_url = '/thanks/'
+
+    def form_valid(self, form):
+        # Access the request object with self.request
+        print(self.request.user)
+        return super().form_valid(form)
+
 
 @permission_required('bookshelf.can_create', raise_exception=True)
 def add_book(request):
@@ -28,10 +55,12 @@ def book_list(request):
 # Book.objects.raw(f"SELECT * FROM books WHERE title = '{title}'")
 
 # GOOD
-title = request.GET.get('title')
-books = Book.objects.filter(title__icontains=title)  # ORM handles injection risks
+def search_books(request):
+    title = request.GET.get('title')  # Now it's safe
+    books = Book.objects.filter(title__icontains=title) if title else Book.objects.all()
 
-# bookshelf/views.py
+    return render(request, 'books/search_results.html', {'books': books})
+    books = Book.objects.filter(title__icontains=title)  
 
 from django.http import HttpResponse
 
