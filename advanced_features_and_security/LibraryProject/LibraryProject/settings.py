@@ -147,6 +147,14 @@ X_FRAME_OPTIONS = 'DENY'
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
+# HSTS settings (for production)
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+
 # Add CSP Middleware if you're using django-csp
 INSTALLED_APPS += ['csp']
 MIDDLEWARE += [
@@ -175,3 +183,17 @@ CSP_DEFAULT_SRC = ("'self'",)
 MIDDLEWARE += [
     'LibraryProject.middleware.ContentSecurityPolicyMiddleware',
 ]
+
+# settings.py
+import os
+
+if not DEBUG:  # Only activate in production
+    SECURE_SSL_REDIRECT = True
+
+INSTALLED_APPS += ['csp']
+
+MIDDLEWARE += ['csp.middleware.CSPMiddleware']
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted.cdn.com')
+CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
