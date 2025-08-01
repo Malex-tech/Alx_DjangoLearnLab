@@ -23,4 +23,6 @@ urlpatterns = [
     path('api/', include('api.urls')),  # <-- include your app's urls
 ]
 
-
+urlpatterns = [
+   path('', include('api.auth_urls')),  # change `your_app_name` to actual app
+]
