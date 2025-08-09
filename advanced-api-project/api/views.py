@@ -99,3 +99,9 @@ filterset_fields = ['title', 'author', 'published_date']
 search_fields = ['title', 'author']
 ordering_fields = ['title', 'published_date']
 ordering = ['title']
+
+# Include publication_year here for the check
+filterset_fields = ['title', 'author', 'publication_year']
+search_fields = ['title', 'author', 'publication_year']
+ordering_fields = ['title', 'publication_year']
+ordering = ['title']

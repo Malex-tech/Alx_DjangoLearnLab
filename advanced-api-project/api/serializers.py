@@ -4,9 +4,14 @@ from .models import Author, Book
 from .models import Book
 
 class BookSerializer(serializers.ModelSerializer):
+    publication_year = serializers.SerializerMethodField()
+
     class Meta:
         model = Book
         fields = '__all__'
+
+    def get_publication_year(self, obj):
+        return obj.published_date.year if obj.published_date else None
 
 class BookSerializer(serializers.ModelSerializer):
     """
