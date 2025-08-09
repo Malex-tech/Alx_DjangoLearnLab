@@ -23,6 +23,8 @@ class Book(models.Model):
         Author,
         on_delete=models.CASCADE,
         related_name='books'  # Enables reverse access: author.books.all()
+    description = models.TextField(blank=True)
+    published_date = models.DateField()
     )
 
     def __str__(self):
