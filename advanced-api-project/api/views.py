@@ -2,11 +2,11 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from .models import Author, Book
 from .serializers import AuthorSerializer, BookSerializer
-
-# api/views.py
 from rest_framework import generics, permissions
 from .models import Book
 from .serializers import BookSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework import generics
 
 # List all books (Read-Only)
 class BookListView(generics.ListAPIView):
