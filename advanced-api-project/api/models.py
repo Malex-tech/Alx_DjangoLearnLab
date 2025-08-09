@@ -18,13 +18,13 @@ class Book(models.Model):
     Linked to an Author via ForeignKey (many books → one author).
     """
     title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    published_date = models.DateField()
     publication_year = models.IntegerField()
     author = models.ForeignKey(
         Author,
         on_delete=models.CASCADE,
         related_name='books'  # Enables reverse access: author.books.all()
-    description = models.TextField(blank=True)
-    published_date = models.DateField()
     )
 
     def __str__(self):
