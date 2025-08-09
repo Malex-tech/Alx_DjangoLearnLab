@@ -25,6 +25,8 @@ class AuthorSerializer(serializers.ModelSerializer):
     Books can also be created or updated through this serializer.
     """
     books = BookSerializer(many=True)
+    books = BookSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = Author
