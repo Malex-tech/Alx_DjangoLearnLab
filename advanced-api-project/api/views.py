@@ -8,6 +8,7 @@ from .serializers import BookSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import generics
 from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework
 
 # List all books (Read-Only)
 class BookListView(generics.ListAPIView):
@@ -93,17 +94,8 @@ class BookDeleteView(generics.DestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]  # only logged-in users can delete
 
-# Enable filtering, searching, and ordering
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    
-    # Filtering by specific fields
-    filterset_fields = ['title', 'author', 'published_date']
-
-    # Searching (case-insensitive partial match)
-    search_fields = ['title', 'author']
-
-    # Ordering fields
-    ordering_fields = ['title', 'published_date']
-
-    # Default ordering (optional)
-    ordering = ['title']
+filter_backends = [rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+filterset_fields = ['title', 'author', 'published_date']
+search_fields = ['title', 'author']
+ordering_fields = ['title', 'published_date']
+ordering = ['title']
