@@ -5,15 +5,15 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views import View
-
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.contrib.auth.models import User
-
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
+from django.views.generic import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from .models import Comment
 from .models import Post
 from .forms import PostForm
 from django.shortcuts import get_object_or_404, redirect
@@ -181,3 +181,20 @@ def test_func(self):
 def post_list(request):
     posts = Post.objects.all().order_by('-created_at')
     return render(request, 'blog/post_list.html', {'posts': posts})
+
+class CommentCreateView(CreateView):
+    model = Comment
+    fields = ['post', 'author', 'text']  # adjust fields as needed
+    template_name = 'blog/comment_form.html'
+    success_url = reverse_lazy('blog:post_list')  # change redirect
+
+class CommentUpdateView(UpdateView):
+    model = Comment
+    fields = ['text']  # usually just editing the content
+    template_name = 'blog/comment_form.html'
+    success_url = reverse_lazy('blog:post_list')
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+    success_url = reverse_lazy('blog:post_list')
