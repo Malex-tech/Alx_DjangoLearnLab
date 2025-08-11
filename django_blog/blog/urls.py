@@ -1,7 +1,13 @@
-from django.urls import path
 from . import views
 from .views import PostListView
 from .views import CommentCreateView, CommentUpdateView, CommentDeleteView
+
+from django.urls import path
+from .views import (
+    CommentCreateView,
+    CommentUpdateView,
+    CommentDeleteView
+)
 
 app_name = 'blog'
 
