@@ -72,6 +72,18 @@ TEMPLATES = [
     },
 ]
 
+# templates dirs (if not already)
+TEMPLATES[0]['DIRS'] = [BASE_DIR / 'blog' / 'templates']
+
+# login redirect and login url
+LOGIN_REDIRECT_URL = 'blog:profile'
+LOGOUT_REDIRECT_URL = 'blog:login'
+LOGIN_URL = 'blog:login'
+
+# media for profile avatars
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 WSGI_APPLICATION = 'django_blog.wsgi.application'
 
 
