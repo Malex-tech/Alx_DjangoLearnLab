@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Form</title>
+</head>
+<body>
+    {% extends "blog/base.html" %}
+{% block content %}
+<h1>
+  {% if object %}Edit Post{% else %}New Post{% endif %}
+</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">{% if object %}Save Changes{% else %}Create Post{% endif %}</button>
+</form>
+
+<p><a href="{% url 'blog:post-list' %}">Back to posts</a></p>
+{% endblock %}
+
+</body>
+</html>

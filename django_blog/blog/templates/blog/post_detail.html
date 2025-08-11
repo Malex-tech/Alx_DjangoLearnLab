@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Detail</title>
+</head>
+<body>
+    {% extends "blog/base.html" %}
+{% block content %}
+<article>
+  <h1>{{ object.title }}</h1>
+  <p>by {{ object.author.username }} — {{ object.published_date|date:"M d, Y H:i" }}</p>
+  <div>{{ object.content|linebreaks }}</div>
+
+  {% if user == object.author %}
+    <p>
+      <a href="{% url 'blog:post-update' object.pk %}">Edit</a> |
+      <a href="{% url 'blog:post-delete' object.pk %}">Delete</a>
+    </p>
+  {% endif %}
+
+  <p><a href="{% url 'blog:post-list' %}">Back to posts</a></p>
+</article>
+{% endblock %}
+
+</body>
+</html>
