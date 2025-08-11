@@ -9,7 +9,7 @@
     {% extends "blog/base.html" %}
 {% block content %}
 <h1>
-  {% if object %}Edit Post{% else %}New Post{% endif %}
+  {{ form.instance.pk|yesno:"Edit Post,Create New Post" }}
 </h1>
 
 <form method="post">
