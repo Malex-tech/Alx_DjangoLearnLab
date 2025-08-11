@@ -1,9 +1,7 @@
-from . import views
-from .views import PostListView
-from .views import CommentCreateView, CommentUpdateView, CommentDeleteView
-
 from django.urls import path
+from . import views
 from .views import (
+    PostListView,
     CommentCreateView,
     CommentUpdateView,
     CommentDeleteView
@@ -20,7 +18,7 @@ urlpatterns = [
     path('profile/edit/', views.profile_edit, name='profile_edit'),
 
     # Class-based Post Views
-    path('posts/', views.PostListView.as_view(), name='post-list'),
+    path('posts/', PostListView.as_view(), name='post-list'),
     path('posts/new/', views.PostCreateView.as_view(), name='post-create'),
     path('posts/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
     path('posts/<int:pk>/edit/', views.PostUpdateView.as_view(), name='post-update'),
@@ -33,11 +31,8 @@ urlpatterns = [
     path('post/<int:pk>/delete/', views.post_delete, name='post_delete'),
     path('post/<int:pk>/', views.post_detail, name='post_detail'),
 
-    # Comments
-    path('post/<int:post_id>/comments/new/', views.add_comment, name='add_comment'),
-    path('comments/<int:comment_id>/edit/', views.edit_comment, name='edit_comment'),
-    path('comments/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
-    path('comments/add/', CommentCreateView.as_view(), name='comment_add'),
-    path('comment/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment_edit'),
+    # Comments (CBV only for check compliance)
+    path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='comment_create'),
+    path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment_update'),
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
 ]
