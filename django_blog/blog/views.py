@@ -23,14 +23,8 @@ from .forms import CommentForm
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.contrib import admin
-from django.urls import path
 from blog import views
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.index, name='index'),  # example
-]
-
+from django.shortcuts import render
 
 def post_list(request):
     query = request.GET.get('q')
@@ -224,3 +218,7 @@ class CommentDeleteView(DeleteView):
     model = Comment
     template_name = 'blog/comment_confirm_delete.html'
     success_url = reverse_lazy('blog:post_list')
+
+def index(request):
+    return render(request, 'index.html')  # or whatever template you want
+
