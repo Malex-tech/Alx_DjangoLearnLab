@@ -20,6 +20,23 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
 from .forms import CommentForm
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404
+
+def post_list(request):
+    query = request.GET.get('q')
+    posts = Post.objects.all()
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) | 
+            Q(content__icontains=query) | 
+            Q(tags__name__icontains=query)
+        ).distinct()
+    return render(request, 'blog/post_list.html', {'posts': posts})
+
+def posts_by_tag(request, tag_name):
+    posts = Post.objects.filter(tags__name__iexact=tag_name)
+    return render(request, 'blog/post_by_tag.html', {'posts': posts, 'tag_name': tag_name})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)

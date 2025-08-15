@@ -3,6 +3,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import path
+from . import views
+
+app_name = 'blog'
+
+urlpatterns = [
+    path('', views.post_list, name='post_list'),
+    path('tags/<str:tag_name>/', views.posts_by_tag, name='posts_by_tag'),
+]
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
