@@ -22,6 +22,15 @@ from .models import Post, Comment
 from .forms import CommentForm
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
+from django.contrib import admin
+from django.urls import path
+from blog import views
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.index, name='index'),  # example
+]
+
 
 def post_list(request):
     query = request.GET.get('q')
