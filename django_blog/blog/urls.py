@@ -1,6 +1,7 @@
 from django.urls import path
-from blog import views
 from . import views
+from blog import views
+from .views import PostByTagListView
 from .views import(
     PostListView,
     CommentCreateView,
@@ -40,4 +41,5 @@ urlpatterns = [
 
 urlpatterns = [
     path('', views.index, name='index'),
+     path('tags/<slug:tag_slug>/', PostByTagListView.as_view(), name='post_by_tag'),
 ]
