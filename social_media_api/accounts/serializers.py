@@ -23,14 +23,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         validated_data.pop('password2')
         password = validated_data.pop('password')
         user = User.objects.create_user(password=password, **validated_data)
-        # Explicitly create token when user is registered
         Token.objects.create(user=user)   # <-- REQUIRED for check
         return user
 
     def create(self, validated_data):
         validated_data.pop('password2')
         password = validated_data.pop('password')
-        # Must use get_user_model().objects.create_user, not User.objects.create_user
         user = get_user_model().objects.create_user(password=password, **validated_data)
         return user
 
@@ -42,7 +40,17 @@ class UserLoginSerializer(serializers.Serializer):
         user = authenticate(username=data['username'], password=data['password'])
         if not user:
             raise serializers.ValidationError("Invalid username or password.")
-        # Ensure a token exists (create if missing)
         token, _ = Token.objects.get_or_create(user=user)
         data['token'] = token.key
+        return data
+
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, data):
+        user = authenticate(username=data['username'], password=data['password'])
+        if not user:
+            raise serializers.ValidationError("Invalid username or password.")
+        data['user'] = user
         return data
