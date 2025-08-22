@@ -1,25 +1,29 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'bio', 'profile_picture', 'followers']
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    # Explicitly add password field to ensure write-only input
+    password = serializers.CharField(write_only=True, required=True)
+    password2 = serializers.CharField(write_only=True, required=True)
 
-class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['username', 'email', 'password', 'password2', 'bio', 'profile_picture']
+
+    def validate(self, data):
+        # Ensure passwords match
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError("Passwords do not match.")
+        return data
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password']
-        )
-        Token.objects.create(user=user)
+        # Remove password2 since it's not part of the model
+        validated_data.pop('password2')
+        password = validated_data.pop('password')
+
+        # Use create_user to ensure password is hashed
+        user = get_user_model().objects.create_user(password=password, **validated_data)
         return user
+
