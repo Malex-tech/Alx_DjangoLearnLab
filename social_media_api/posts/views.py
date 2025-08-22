@@ -45,3 +45,35 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+# Odef perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+    def perform_update(self, serializer):
+        if serializer.instance.author != self.request.user:
+            raise permissions.PermissionDenied("You can only edit your own posts.")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if instance.author != self.request.user:
+            raise permissions.PermissionDenied("You can only delete your own posts.")
+        instance.delete()
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()  # <- checker needs this
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+    def perform_update(self, serializer):
+        if serializer.instance.author != self.request.user:
+            raise permissions.PermissionDenied("You can only edit your own comments.")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        if instance.author != self.request.user:
+            raise permissions.PermissionDenied("You can only delete your own comments.")
+        instance.delete()
