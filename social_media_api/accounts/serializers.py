@@ -1,8 +1,24 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.authtoken.models import Token
 
 User = get_user_model()
+
+class UserMiniSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "username"]
+
+class ProfileSerializer(serializers.ModelSerializer):
+    followers_count = serializers.IntegerField(source="followers.count", read_only=True)
+    following_count = serializers.IntegerField(source="following.count", read_only=True)
+    following = UserMiniSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "bio", "profile_picture",
+                  "followers_count", "following_count", "following"]
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

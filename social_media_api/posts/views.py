@@ -4,7 +4,25 @@ from rest_framework.decorators import action
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .permissions import IsOwnerOrReadOnly
+from rest_framework.views import APIView
+from rest_framework import permissions, status
+from rest_framework.pagination import PageNumberPagination
+from django.contrib.auth import get_user_model
+from .models import Post
+from .serializers import PostSerializer
 
+User = get_user_model()
+
+class FeedView(APIView, PageNumberPagination):
+    permission_classes = [permissions.IsAuthenticated]
+    page_size = 10
+
+    def get(self, request):
+        following_ids = request.user.following.values_list("id", flat=True)
+        qs = Post.objects.filter(author_id__in=following_ids).order_by("-created_at")
+        page = self.paginate_queryset(qs, request, view=self)
+        ser = PostSerializer(page, many=True)
+        return self.get_paginated_response(ser.data)
 
 class PostViewSet(viewsets.ModelViewSet):
     # Use .all() explicitly so checker passes
