@@ -10,7 +10,10 @@ from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth import get_user_model
 from .models import Post
 from .serializers import PostSerializer
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from .models import Post, Like
+from .serializers import LikeSerializer
+
 
 User = get_user_model()
 
@@ -100,3 +103,28 @@ class CommentViewSet(viewsets.ModelViewSet):
         if instance.author != self.request.user:
             raise permissions.PermissionDenied("You can only delete your own comments.")
         instance.delete()
+
+class LikePostView(generics.GenericAPIView):
+    serializer_class = LikeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = Post.objects.get(pk=pk)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        if not created:
+            return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"detail": "Post liked."}, status=status.HTTP_201_CREATED)
+
+
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = Post.objects.get(pk=pk)
+        try:
+            like = Like.objects.get(user=request.user, post=post)
+            like.delete()
+            return Response({"detail": "Post unliked."}, status=status.HTTP_200_OK)
+        except Like.DoesNotExist:
+            return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
