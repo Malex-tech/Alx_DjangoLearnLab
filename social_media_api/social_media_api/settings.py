@@ -15,6 +15,8 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DEBUG = False
+
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'False'
 
