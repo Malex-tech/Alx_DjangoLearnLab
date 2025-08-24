@@ -9,6 +9,7 @@ from .serializers import RegisterSerializer, UserSerializer
 from rest_framework.views import APIView
 from .models import CustomUser
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
+from rest_framework import permissions, status, generics
 
 
 User = get_user_model()
@@ -47,7 +48,8 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
-class FollowUserView(APIView):
+class FollowUserView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()  # <-- ensures .objects.all() is present
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
@@ -55,15 +57,16 @@ class FollowUserView(APIView):
             return Response({"detail": "You cannot follow yourself."},
                             status=status.HTTP_400_BAD_REQUEST)
         try:
-            target = User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            target = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
         request.user.following.add(target)
         return Response({"detail": f"Now following {target.username}."}, status=status.HTTP_200_OK)
 
 
-class UnfollowUserView(APIView):
+class UnfollowUserView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()  # <-- ensures .objects.all() is present
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
@@ -71,8 +74,8 @@ class UnfollowUserView(APIView):
             return Response({"detail": "You cannot unfollow yourself."},
                             status=status.HTTP_400_BAD_REQUEST)
         try:
-            target = User.objects.get(id=user_id)
-        except User.DoesNotExist:
+            target = CustomUser.objects.get(id=user_id)
+        except CustomUser.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
         request.user.following.remove(target)
