@@ -13,6 +13,7 @@ from .serializers import PostSerializer
 from rest_framework import generics, permissions, status
 from .models import Post, Like
 from .serializers import LikeSerializer
+from notifications.utils import create_notification
 
 
 User = get_user_model()
@@ -113,6 +114,14 @@ class LikePostView(generics.GenericAPIView):
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         if not created:
             return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if post.author != request.user:
+            create_notification(
+                recipient=post.author,
+                actor=request.user,
+                verb="liked your post",
+                target=post,
+            )
         return Response({"detail": "Post liked."}, status=status.HTTP_201_CREATED)
 
 
@@ -128,3 +137,15 @@ class UnlikePostView(generics.GenericAPIView):
         except Like.DoesNotExist:
             return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
+from notifications.utils import create_notification
+
+def perform_create(self, serializer):
+    comment = serializer.save(author=self.request.user)
+    post = comment.post
+    if post.author != self.request.user:
+        create_notification(
+            recipient=post.author,
+            actor=self.request.user,
+            verb="commented on your post",
+            target=comment,
+        )

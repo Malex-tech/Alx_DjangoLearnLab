@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',  # or JWT if you choose SimpleJWT
     'accounts',
     'posts',
+    'notifications',
 ]
 
 REST_FRAMEWORK = {

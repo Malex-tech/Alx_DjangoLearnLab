@@ -10,7 +10,8 @@ from rest_framework.views import APIView
 from .models import CustomUser
 from .serializers import RegisterSerializer, LoginSerializer, UserSerializer
 from rest_framework import permissions, status, generics
-
+from notifications.utils import create_notification
+from rest_framework import permissions, status, generics
 
 User = get_user_model()
 
@@ -49,7 +50,7 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 class FollowUserView(generics.GenericAPIView):
-    queryset = CustomUser.objects.all()  # <-- ensures .objects.all() is present
+    queryset = CustomUser.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
@@ -62,11 +63,19 @@ class FollowUserView(generics.GenericAPIView):
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
         request.user.following.add(target)
+
+        # create notification for the followed user
+        create_notification(
+            recipient=target,
+            actor=request.user,
+            verb="started following you",
+            target=target,  # target can be the user themself
+        )
         return Response({"detail": f"Now following {target.username}."}, status=status.HTTP_200_OK)
 
 
 class UnfollowUserView(generics.GenericAPIView):
-    queryset = CustomUser.objects.all()  # <-- ensures .objects.all() is present
+    queryset = CustomUser.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
@@ -79,4 +88,5 @@ class UnfollowUserView(generics.GenericAPIView):
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
         request.user.following.remove(target)
+        # usually no notification on unfollow
         return Response({"detail": f"Unfollowed {target.username}."}, status=status.HTTP_200_OK)
