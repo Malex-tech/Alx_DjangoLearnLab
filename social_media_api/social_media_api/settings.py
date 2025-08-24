@@ -38,6 +38,17 @@ DATABASES = {
     'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
 }
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "your_db_name",
+        "USER": "your_db_user",
+        "PASSWORD": "your_db_password",
+        "HOST": "your_db_host",
+        "PORT": "5432",  # or whatever your DB port is
+    }
+}
+
 # Static files (WhiteNoise as fallback)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
