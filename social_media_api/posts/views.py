@@ -14,6 +14,11 @@ from rest_framework import generics, permissions, status
 from .models import Post, Like
 from .serializers import LikeSerializer
 from notifications.utils import create_notification
+from rest_framework import generics, permissions
+from notifications.models import Notification
+from rest_framework import status
+
+
 
 
 User = get_user_model()
@@ -149,3 +154,42 @@ def perform_create(self, serializer):
             verb="commented on your post",
             target=comment,
         )
+
+class LikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        # Prevent double likes
+        if Like.objects.filter(post=post, user=user).exists():
+            return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create Like
+        Like.objects.create(post=post, user=user)
+
+        # Create Notification
+        Notification.objects.create(
+            recipient=post.author,
+            actor=user,
+            verb="liked your post",
+            target=post
+        )
+
+        return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
+
+
+class UnlikePostView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        post = generics.get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        like = Like.objects.filter(post=post, user=user).first()
+        if not like:
+            return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        like.delete()
+        return Response({"detail": "Post unliked successfully."}, status=status.HTTP_200_OK)
